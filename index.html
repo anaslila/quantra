@@ -2,26 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantra ERP 3.1.6 | High-Speed Logic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantra ERP 3.2 | Universal Intelligence</title>
     <link rel="icon" type="image/png" href="https://i.postimg.cc/rsj8hTcz/Quantra-ERP-removebg-preview.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body class="erp-v3-theme">
 
     <div class="app-shell">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="brand">
-                <img src="https://i.postimg.cc/rsj8hTcz/Quantra-ERP-removebg-preview.png" alt="Quantra Logo" class="app-logo">
+                <img id="side-logo-preview" src="https://i.postimg.cc/rsj8hTcz/Quantra-ERP-removebg-preview.png" alt="Logo" class="app-logo">
                 <div class="brand-text">
-                    <span class="brand-name">Quantra</span>
-                    <span class="brand-sub">ERP Solutions</span>
+                    <span class="brand-name" id="side-biz-name">Quantra</span>
+                    <span class="brand-sub">Smart ERP</span>
                 </div>
             </div>
 
-            <nav class="nav-menu" id="main-nav">
+            <nav class="nav-menu">
                 <div class="nav-label">Core Modules</div>
                 <a href="javascript:void(0)" class="nav-item active" data-target="dashboard">
                     <i class="ri-dashboard-fill"></i> <span>Dashboard</span>
@@ -40,11 +41,18 @@
                 <a href="javascript:void(0)" class="nav-item" data-target="history">
                     <i class="ri-bank-card-fill"></i> <span>Bill Ledger</span>
                 </a>
+
+                <div class="nav-label">Settings</div>
+                <a href="javascript:void(0)" class="nav-item" data-target="about-biz">
+                    <i class="ri-store-2-fill"></i> <span>About Business</span>
+                </a>
             </nav>
 
             <div class="sidebar-footer">
-                <div class="kb-hint"><b>F2</b> Search | <b>F8</b> Print</div>
-                <div class="version-tag">v3.1.6 Stable</div>
+                <div id="device-tag" class="kb-hint">Detecting Device...</div>
+                <button id="btn-install-android" class="btn-primary full" style="display:none; margin-top:10px; background:#10b981;">
+                    <i class="ri-download-cloud-fill"></i> Install App
+                </button>
             </div>
         </aside>
 
@@ -52,8 +60,10 @@
             <header class="top-bar">
                 <div class="search-wrapper">
                     <i class="ri-search-line"></i>
-                    <input type="text" id="global-search" placeholder="Quick Search (F2)...">
+                    <input type="text" id="global-search" placeholder="Quick search inventory or clients...">
+                    <div id="global-results" class="search-results-dropdown"></div>
                 </div>
+                
                 <div class="header-actions">
                     <div class="system-time-block">
                         <div class="date-chip" id="current-date">-- -- ----</div>
@@ -64,19 +74,22 @@
 
             <div class="content-viewport">
                 <section id="dashboard" class="content-section active">
-                    <h1 class="page-title">Business Overview</h1>
+                    <h1 class="page-title">Overview</h1>
+                    <div id="ios-prompt" class="alert-box" style="display:none;">
+                        <i class="ri-apple-fill"></i> To install on iPhone: Tap <i class="ri-share-box-line"></i> then "Add to Home Screen".
+                    </div>
                     <div class="metrics-grid">
                         <div class="metric-card">
                             <div class="m-icon blue"><i class="ri-line-chart-line"></i></div>
                             <div class="m-data">
-                                <span class="m-label">Net Revenue</span>
+                                <span class="m-label">Revenue</span>
                                 <h2 id="stat-revenue">₹0.00</h2>
                             </div>
                         </div>
                         <div class="metric-card">
                             <div class="m-icon green"><i class="ri-refund-2-line"></i></div>
                             <div class="m-data">
-                                <span class="m-label">Invoices Issued</span>
+                                <span class="m-label">Sales</span>
                                 <h2 id="stat-invoices">0</h2>
                             </div>
                         </div>
@@ -84,132 +97,87 @@
                 </section>
 
                 <section id="inventory" class="content-section">
-                    <div class="section-top" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h1 class="page-title">Stock Master</h1>
-                        <button class="btn-primary" onclick="openModal('inventory-modal')">
-                            <i class="ri-add-fill"></i> New Product
-                        </button>
+                    <div class="section-header">
+                        <h1 class="page-title">Inventory</h1>
+                        <button class="btn-primary" onclick="openModal('inventory-modal')"><i class="ri-add-line"></i> Add Item</button>
                     </div>
-                    <div class="table-card">
-                        <table class="q-table">
-                            <thead>
-                                <tr><th>Item Description</th><th>In-Stock</th><th>Unit Rate</th><th>Actions</th></tr>
-                            </thead>
-                            <tbody id="inventory-list"></tbody>
-                        </table>
-                    </div>
+                    <div class="table-card"><table class="q-table"><thead><tr><th>Item</th><th>Stock</th><th>Price</th><th>Action</th></tr></thead><tbody id="inventory-list"></tbody></table></div>
                 </section>
 
                 <section id="customers" class="content-section">
-                    <div class="section-top" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h1 class="page-title">Client Directory</h1>
-                        <button class="btn-primary" onclick="openModal('customer-modal')">
-                            <i class="ri-user-add-fill"></i> New Client
-                        </button>
+                    <div class="section-header">
+                        <h1 class="page-title">CRM Directory</h1>
+                        <button class="btn-primary" onclick="openModal('customer-modal')"><i class="ri-user-add-line"></i> Add Client</button>
                     </div>
-                    <div class="table-card">
-                        <table class="q-table">
-                            <thead>
-                                <tr><th>Client Name</th><th>Email</th><th>Contact</th><th>Actions</th></tr>
-                            </thead>
-                            <tbody id="customer-list"></tbody>
-                        </table>
-                    </div>
+                    <div class="table-card"><table class="q-table"><thead><tr><th>Customer Name</th><th>Phone</th><th>History</th><th>Action</th></tr></thead><tbody id="customer-list"></tbody></table></div>
                 </section>
 
                 <section id="invoicing" class="content-section">
-                    <h1 class="page-title">Professional Billing</h1>
+                    <h1 class="page-title">Billing Terminal</h1>
                     <div class="billing-grid">
                         <div class="bill-form-card">
                             <div class="q-group relative">
-                                <label>1. Select Customer</label>
-                                <input type="text" id="cust-search" class="q-input chained-input" placeholder="Search or type new..." autocomplete="off">
+                                <label>Customer Name</label>
+                                <input type="text" id="cust-search" class="q-input" placeholder="Search client..." autocomplete="off">
                                 <div id="cust-results" class="search-results-dropdown"></div>
                             </div>
-                            
-                            <div class="q-divider"></div>
-
                             <div class="item-entry-v3">
-                                <div class="q-group relative" style="flex: 2;">
-                                    <label>2. Search Item</label>
-                                    <input type="text" id="item-search" class="q-input chained-input" placeholder="Product name..." autocomplete="off">
+                                <div class="q-group relative" style="flex:2">
+                                    <label>Product</label>
+                                    <input type="text" id="item-search" class="q-input" placeholder="Search item..." autocomplete="off">
                                     <div id="item-results" class="search-results-dropdown"></div>
                                 </div>
-                                <div class="q-group" style="width: 100px;">
+                                <div class="q-group" style="width:100px">
                                     <label>Qty</label>
-                                    <input type="number" id="inv-qty" value="1" min="1" class="q-input chained-input">
+                                    <input type="number" id="inv-qty" value="1" class="q-input">
                                 </div>
-                                <button class="btn-secondary" id="btn-add-item" onclick="addItemToInvoice()" style="margin-top: 25px; height: 45px;">Add</button>
+                                <button class="btn-secondary" onclick="addItemToInvoice()" style="margin-bottom:1.5rem; height:48px;">Add</button>
                             </div>
                         </div>
-
                         <div class="bill-preview-card">
                             <h3>Voucher Details</h3>
-                            <div class="items-list-container" style="min-height: 200px;">
-                                <table class="q-table sm">
-                                    <thead><tr><th>Desc</th><th>Qty</th><th>Subtotal</th></tr></thead>
-                                    <tbody id="invoice-items-list"></tbody>
-                                </table>
-                            </div>
+                            <div class="preview-scroll"><table class="q-table sm"><thead><tr><th>Item</th><th>Qty</th><th>Total</th></tr></thead><tbody id="invoice-items-list"></tbody></table></div>
                             <div class="bill-summary">
-                                <div class="total-row" style="display:flex; justify-content:space-between; padding: 15px 0; border-top: 1px solid #eee;">
-                                    <span style="font-weight:700;">Grand Total</span>
-                                    <span class="total-val" id="invoice-total" style="font-size: 1.4rem; color: var(--primary); font-weight:800;">₹0.00</span>
-                                </div>
-                                <button class="btn-success" onclick="generateInvoice()">
-                                    <i class="ri-save-3-line"></i> Save & Print (F8)
-                                </button>
+                                <div class="total-row"><span>Grand Total</span><span id="invoice-total">₹0.00</span></div>
+                                <button class="btn-success" onclick="generateInvoice()"><i class="ri-printer-line"></i> Save & Print (F8)</button>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                <section id="about-biz" class="content-section">
+                    <h1 class="page-title">Business Profile</h1>
+                    <div class="bill-form-card">
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                            <div class="q-group"><label>Business Name</label><input type="text" id="biz-name" class="q-input" placeholder="E.g. Quantra Retail"></div>
+                            <div class="q-group"><label>Email Address</label><input type="email" id="biz-email" class="q-input" placeholder="contact@business.com"></div>
+                            <div class="q-group"><label>Phone Number</label><input type="text" id="biz-phone" class="q-input" placeholder="+91 98XXX XXXXX"></div>
+                            <div class="q-group"><label>Tax/GST Number</label><input type="text" id="biz-tax" class="q-input" placeholder="Optional"></div>
+                        </div>
+                        <div class="q-group"><label>Address</label><textarea id="biz-address" class="q-input" rows="2" style="height:auto;"></textarea></div>
+                        <div class="q-group">
+                            <label>Business Logo URL</label>
+                            <input type="text" id="biz-logo" class="q-input" placeholder="Paste image link here" oninput="updateLogoPreview(this.value)">
+                        </div>
+                        <button class="btn-primary" onclick="saveBusinessProfile()"><i class="ri-save-line"></i> Update Profile</button>
                     </div>
                 </section>
 
                 <section id="history" class="content-section">
                     <h1 class="page-title">Sales Ledger</h1>
-                    <div class="table-card">
-                        <table class="q-table">
-                            <thead>
-                                <tr><th>Inv #</th><th>Date</th><th>Customer</th><th>Amount</th><th>Actions</th></tr>
-                            </thead>
-                            <tbody id="history-list-v3"></tbody>
-                        </table>
-                    </div>
+                    <div class="table-card"><table class="q-table"><thead><tr><th>Inv #</th><th>Date</th><th>Customer</th><th>Amount</th><th>Action</th></tr></thead><tbody id="history-list-v3"></tbody></table></div>
                 </section>
             </div>
         </main>
     </div>
 
-    <div id="inventory-modal" class="modal-blur">
-        <div class="modal-box">
-            <div class="modal-head"><h3>Add Product</h3><i class="ri-close-line" onclick="closeModal('inventory-modal')"></i></div>
-            <div class="modal-body entry-form">
-                <div class="q-group"><label>Item Name</label><input type="text" id="prod-name" class="q-input"></div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                    <div class="q-group"><label>Rate (₹)</label><input type="number" id="prod-price" class="q-input"></div>
-                    <div class="q-group"><label>Stock</label><input type="number" id="prod-stock" class="q-input"></div>
-                </div>
-                <button class="btn-primary full" onclick="saveProduct()">Save Product</button>
-            </div>
-        </div>
-    </div>
+    <div id="inventory-modal" class="modal-blur"><div class="modal-box"><div class="modal-head"><h3>Add Product</h3><i class="ri-close-line" onclick="closeModal('inventory-modal')"></i></div><div class="modal-body"><div class="q-group"><label>Product Name</label><input type="text" id="prod-name" class="q-input"></div><div class="q-group"><label>Rate (₹)</label><input type="number" id="prod-price" class="q-input"></div><div class="q-group"><label>Initial Stock</label><input type="number" id="prod-stock" class="q-input"></div><button class="btn-primary full" onclick="saveProduct()">Save</button></div></div></div>
 
-    <div id="customer-modal" class="modal-blur">
-        <div class="modal-box">
-            <div class="modal-head"><h3>New Customer</h3><i class="ri-close-line" onclick="closeModal('customer-modal')"></i></div>
-            <div class="modal-body entry-form">
-                <div class="q-group"><label>Full Name</label><input type="text" id="cust-name" class="q-input"></div>
-                <div class="q-group"><label>Contact</label><input type="text" id="cust-phone" class="q-input"></div>
-                <button class="btn-primary full" onclick="saveCustomer()">Create Account</button>
-            </div>
-        </div>
-    </div>
+    <div id="customer-modal" class="modal-blur"><div class="modal-box"><div class="modal-head"><h3>New Customer</h3><i class="ri-close-line" onclick="closeModal('customer-modal')"></i></div><div class="modal-body"><div class="q-group"><label>Full Name</label><input type="text" id="cust-name" class="q-input"></div><div class="q-group"><label>Phone</label><input type="text" id="cust-phone" class="q-input"></div><button class="btn-primary full" onclick="saveCustomer()">Create Account</button></div></div></div>
 
     <div id="invoice-view-modal" class="modal-blur">
         <div class="modal-box invoice-paper">
-            <div class="modal-head no-print">
-                <button onclick="window.print()" class="btn-secondary sm"><i class="ri-printer-line"></i> Print Now</button>
-                <i class="ri-close-line" onclick="closeModal('invoice-view-modal')" style="cursor:pointer"></i>
-            </div>
+            <div class="modal-head no-print"><h3>Preview Invoice</h3><button class="btn-secondary" onclick="window.print()"><i class="ri-printer-line"></i> Print</button><i class="ri-close-line" onclick="closeAllModals()"></i></div>
             <div id="printable-content" class="invoice-body"></div>
         </div>
     </div>
