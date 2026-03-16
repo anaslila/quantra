@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantra ERP 3.1.5 | Keyboard Master Suite</title>
+    <title>Quantra ERP 3.1.6 | High-Speed Logic</title>
     <link rel="icon" type="image/png" href="https://i.postimg.cc/rsj8hTcz/Quantra-ERP-removebg-preview.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -30,7 +30,7 @@
                     <i class="ri-box-3-fill"></i> <span>Inventory</span>
                 </a>
                 <a href="javascript:void(0)" class="nav-item" data-target="customers">
-                    <i class="ri-user-settings-fill"></i> <span>CRM</span>
+                    <i class="ri-user-settings-fill"></i> <span>CRM / Clients</span>
                 </a>
                 
                 <div class="nav-label">Financials</div>
@@ -43,8 +43,8 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="kb-hint"><b>F2</b> Quick Search</div>
-                <div class="version-tag">v3.1.5 Stable</div>
+                <div class="kb-hint"><b>F2</b> Search | <b>F8</b> Print</div>
+                <div class="version-tag">v3.1.6 Stable</div>
             </div>
         </aside>
 
@@ -52,17 +52,19 @@
             <header class="top-bar">
                 <div class="search-wrapper">
                     <i class="ri-search-line"></i>
-                    <input type="text" id="global-search" placeholder="Search records (F2)...">
+                    <input type="text" id="global-search" placeholder="Quick Search (F2)...">
                 </div>
                 <div class="header-actions">
-                    <div class="date-chip" id="current-date">-- -- ----</div>
-                    <div class="user-profile"><span class="u-initials">AD</span></div>
+                    <div class="system-time-block">
+                        <div class="date-chip" id="current-date">-- -- ----</div>
+                        <div class="clock-chip" id="real-time-clock">00:00:00 AM</div>
+                    </div>
                 </div>
             </header>
 
             <div class="content-viewport">
                 <section id="dashboard" class="content-section active">
-                    <h1 class="page-title">Business Analytics</h1>
+                    <h1 class="page-title">Business Overview</h1>
                     <div class="metrics-grid">
                         <div class="metric-card">
                             <div class="m-icon blue"><i class="ri-line-chart-line"></i></div>
@@ -74,7 +76,7 @@
                         <div class="metric-card">
                             <div class="m-icon green"><i class="ri-refund-2-line"></i></div>
                             <div class="m-data">
-                                <span class="m-label">Total Invoices</span>
+                                <span class="m-label">Invoices Issued</span>
                                 <h2 id="stat-invoices">0</h2>
                             </div>
                         </div>
@@ -82,16 +84,16 @@
                 </section>
 
                 <section id="inventory" class="content-section">
-                    <div class="section-top">
-                        <h1 class="page-title">Stock Management</h1>
+                    <div class="section-top" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h1 class="page-title">Stock Master</h1>
                         <button class="btn-primary" onclick="openModal('inventory-modal')">
-                            <i class="ri-add-fill"></i> Add Product (Ins)
+                            <i class="ri-add-fill"></i> New Product
                         </button>
                     </div>
                     <div class="table-card">
                         <table class="q-table">
                             <thead>
-                                <tr><th>Product Name</th><th>Stock</th><th>Rate</th><th>Action</th></tr>
+                                <tr><th>Item Description</th><th>In-Stock</th><th>Unit Rate</th><th>Actions</th></tr>
                             </thead>
                             <tbody id="inventory-list"></tbody>
                         </table>
@@ -99,7 +101,7 @@
                 </section>
 
                 <section id="customers" class="content-section">
-                    <div class="section-top">
+                    <div class="section-top" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                         <h1 class="page-title">Client Directory</h1>
                         <button class="btn-primary" onclick="openModal('customer-modal')">
                             <i class="ri-user-add-fill"></i> New Client
@@ -108,7 +110,7 @@
                     <div class="table-card">
                         <table class="q-table">
                             <thead>
-                                <tr><th>Client Name</th><th>Email</th><th>Contact</th><th>Action</th></tr>
+                                <tr><th>Client Name</th><th>Email</th><th>Contact</th><th>Actions</th></tr>
                             </thead>
                             <tbody id="customer-list"></tbody>
                         </table>
@@ -120,8 +122,8 @@
                     <div class="billing-grid">
                         <div class="bill-form-card">
                             <div class="q-group relative">
-                                <label>Search Customer (↑/↓ to choose)</label>
-                                <input type="text" id="cust-search" class="q-input" placeholder="Type customer name..." autocomplete="off">
+                                <label>1. Select Customer</label>
+                                <input type="text" id="cust-search" class="q-input chained-input" placeholder="Search or type new..." autocomplete="off">
                                 <div id="cust-results" class="search-results-dropdown"></div>
                             </div>
                             
@@ -129,43 +131,45 @@
 
                             <div class="item-entry-v3">
                                 <div class="q-group relative" style="flex: 2;">
-                                    <label>Search Item</label>
-                                    <input type="text" id="item-search" class="q-input" placeholder="Product name..." autocomplete="off">
+                                    <label>2. Search Item</label>
+                                    <input type="text" id="item-search" class="q-input chained-input" placeholder="Product name..." autocomplete="off">
                                     <div id="item-results" class="search-results-dropdown"></div>
                                 </div>
                                 <div class="q-group" style="width: 100px;">
                                     <label>Qty</label>
-                                    <input type="number" id="inv-qty" value="1" min="1" class="q-input">
+                                    <input type="number" id="inv-qty" value="1" min="1" class="q-input chained-input">
                                 </div>
-                                <button class="btn-secondary" id="btn-add-item" onclick="addItemToInvoice()" style="margin-top: 22px;">Add (Enter)</button>
+                                <button class="btn-secondary" id="btn-add-item" onclick="addItemToInvoice()" style="margin-top: 25px; height: 45px;">Add</button>
                             </div>
                         </div>
 
                         <div class="bill-preview-card">
-                            <h3>Current Voucher</h3>
-                            <div class="items-list-container">
+                            <h3>Voucher Details</h3>
+                            <div class="items-list-container" style="min-height: 200px;">
                                 <table class="q-table sm">
                                     <thead><tr><th>Desc</th><th>Qty</th><th>Subtotal</th></tr></thead>
                                     <tbody id="invoice-items-list"></tbody>
                                 </table>
                             </div>
                             <div class="bill-summary">
-                                <div class="total-row">
-                                    <span>Total Payable</span>
-                                    <span class="total-val" id="invoice-total">₹0.00</span>
+                                <div class="total-row" style="display:flex; justify-content:space-between; padding: 15px 0; border-top: 1px solid #eee;">
+                                    <span style="font-weight:700;">Grand Total</span>
+                                    <span class="total-val" id="invoice-total" style="font-size: 1.4rem; color: var(--primary); font-weight:800;">₹0.00</span>
                                 </div>
-                                <button class="btn-success" onclick="generateInvoice()">Post Bill (Ctrl+Enter)</button>
+                                <button class="btn-success" onclick="generateInvoice()">
+                                    <i class="ri-save-3-line"></i> Save & Print (F8)
+                                </button>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <section id="history" class="content-section">
-                    <h1 class="page-title">Transaction Ledger</h1>
+                    <h1 class="page-title">Sales Ledger</h1>
                     <div class="table-card">
                         <table class="q-table">
                             <thead>
-                                <tr><th>Voucher #</th><th>Date</th><th>Client</th><th>Amount</th><th>Actions</th></tr>
+                                <tr><th>Inv #</th><th>Date</th><th>Customer</th><th>Amount</th><th>Actions</th></tr>
                             </thead>
                             <tbody id="history-list-v3"></tbody>
                         </table>
@@ -177,50 +181,25 @@
 
     <div id="inventory-modal" class="modal-blur">
         <div class="modal-box">
-            <div class="modal-head">
-                <h3><i class="ri-box-3-line"></i> Add New Product</h3>
-                <i class="ri-close-line" onclick="closeModal('inventory-modal')"></i>
-            </div>
+            <div class="modal-head"><h3>Add Product</h3><i class="ri-close-line" onclick="closeModal('inventory-modal')"></i></div>
             <div class="modal-body entry-form">
-                <div class="form-row">
-                    <label>Item Description</label>
-                    <input type="text" id="prod-name" class="q-input" placeholder="Enter product name">
+                <div class="q-group"><label>Item Name</label><input type="text" id="prod-name" class="q-input"></div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                    <div class="q-group"><label>Rate (₹)</label><input type="number" id="prod-price" class="q-input"></div>
+                    <div class="q-group"><label>Stock</label><input type="number" id="prod-stock" class="q-input"></div>
                 </div>
-                <div class="form-grid">
-                    <div class="form-row">
-                        <label>Unit Price (₹)</label>
-                        <input type="number" id="prod-price" class="q-input" placeholder="0.00">
-                    </div>
-                    <div class="form-row">
-                        <label>Opening Stock</label>
-                        <input type="number" id="prod-stock" class="q-input" placeholder="0">
-                    </div>
-                </div>
-                <button class="btn-primary full" onclick="saveProduct()">Commit Product (Enter)</button>
+                <button class="btn-primary full" onclick="saveProduct()">Save Product</button>
             </div>
         </div>
     </div>
 
     <div id="customer-modal" class="modal-blur">
         <div class="modal-box">
-            <div class="modal-head">
-                <h3><i class="ri-user-add-line"></i> Create Client Account</h3>
-                <i class="ri-close-line" onclick="closeModal('customer-modal')"></i>
-            </div>
+            <div class="modal-head"><h3>New Customer</h3><i class="ri-close-line" onclick="closeModal('customer-modal')"></i></div>
             <div class="modal-body entry-form">
-                <div class="form-row">
-                    <label>Client Full Name</label>
-                    <input type="text" id="cust-name" class="q-input" placeholder="Enter name">
-                </div>
-                <div class="form-row">
-                    <label>Email Address</label>
-                    <input type="email" id="cust-email" class="q-input" placeholder="example@mail.com">
-                </div>
-                <div class="form-row">
-                    <label>Contact Number</label>
-                    <input type="text" id="cust-phone" class="q-input" placeholder="+91">
-                </div>
-                <button class="btn-primary full" onclick="saveCustomer()">Register Client (Enter)</button>
+                <div class="q-group"><label>Full Name</label><input type="text" id="cust-name" class="q-input"></div>
+                <div class="q-group"><label>Contact</label><input type="text" id="cust-phone" class="q-input"></div>
+                <button class="btn-primary full" onclick="saveCustomer()">Create Account</button>
             </div>
         </div>
     </div>
@@ -228,10 +207,8 @@
     <div id="invoice-view-modal" class="modal-blur">
         <div class="modal-box invoice-paper">
             <div class="modal-head no-print">
-                <div class="head-left">
-                    <button onclick="window.print()" class="btn-secondary sm"><i class="ri-printer-line"></i> Print</button>
-                </div>
-                <i class="ri-close-line" onclick="closeModal('invoice-view-modal')" style="cursor:pointer; font-size: 24px;"></i>
+                <button onclick="window.print()" class="btn-secondary sm"><i class="ri-printer-line"></i> Print Now</button>
+                <i class="ri-close-line" onclick="closeModal('invoice-view-modal')" style="cursor:pointer"></i>
             </div>
             <div id="printable-content" class="invoice-body"></div>
         </div>
